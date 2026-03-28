@@ -9,6 +9,8 @@ import {
   Snowflake,
   Sun,
   Landmark,
+  Sailboat,
+  Gem,
 } from "lucide-react";
 
 export const categories = [
@@ -61,5 +63,17 @@ export const categories = [
     label: "Historical",
     value: "historical",
     icon: Landmark,
+  },
+
+  // 🔥 NEW
+  {
+    label: "Lake",
+    value: "lake",
+    icon: Sailboat,
+  },
+  {
+    label: "Luxury",
+    value: "luxury",
+    icon: Gem,
   },
 ];

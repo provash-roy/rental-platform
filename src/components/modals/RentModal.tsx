@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import { categories } from "@/modules/rent/ui/components/data";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 enum STEPS {
   CATEGORY = 0,
@@ -16,6 +18,7 @@ export default function RentModal() {
   const [step, setStep] = useState(STEPS.CATEGORY);
 
   const [category, setCategory] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [mapPosition, setMapPosition] = useState<[number, number]>([
@@ -31,40 +34,57 @@ export default function RentModal() {
 
   const [loading, setLoading] = useState(false);
 
- 
   const onNext = () => {
     setStep((prev) => (prev < STEPS.IMAGE ? prev + 1 : prev));
   };
 
- 
   const onBack = () => {
     setStep((prev) => (prev > STEPS.CATEGORY ? prev - 1 : prev));
   };
 
-  
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (step !== STEPS.IMAGE) return onNext();
 
     setLoading(true);
 
     const data = {
       category,
-      city,
-      address,
-      mapPosition,
       title,
       description,
-      maxGuests,
       pricePerNight,
-      image,
+      maxGuests,
+
+      images: image,
+
+      location: {
+        city,
+        address,
+        coordinates: mapPosition,
+      },
     };
 
     console.log("Final Data:", data);
 
-   
+    await axios.post("/api/listing", data);
+
+    toast.success("Your listing has been created succesfully");
+
+    // Reset all
+    setCategory("");
+    setSelectedCountry("");
+    setCity("");
+    setAddress("");
+    setMapPosition([51.505, -0.09]);
+
+    setTitle("");
+    setDescription("");
+    setPricePerNight(0);
+    setImage("");
+    setMaxGuests(1);
+    setStep(STEPS.CATEGORY);
+
     setLoading(false);
   };
-
 
   const isNextDisabled =
     (step === STEPS.CATEGORY && !category) ||
@@ -76,8 +96,7 @@ export default function RentModal() {
   let bodyContent: React.ReactNode;
 
   switch (step) {
-   
-  // STEP 1: CATEGORY
+    // STEP 1: CATEGORY
     case STEPS.CATEGORY:
       bodyContent = (
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -104,10 +123,18 @@ export default function RentModal() {
       );
       break;
 
-  // STEP 2: LOCATION
+    // STEP 2: LOCATION
     case STEPS.LOCATION:
       bodyContent = (
         <div className="flex flex-col gap-4">
+          <input
+            type="text"
+            placeholder="Country"
+            className="border p-2 rounded"
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+          />
+
           <input
             type="text"
             placeholder="City"
@@ -127,7 +154,6 @@ export default function RentModal() {
       );
       break;
 
-    
     // STEP 3: DETAILS
     case STEPS.DETAILS:
       bodyContent = (
@@ -150,7 +176,6 @@ export default function RentModal() {
       );
       break;
 
-   
     // STEP 4: GUESTS
     case STEPS.GUESTS:
       bodyContent = (
@@ -174,9 +199,8 @@ export default function RentModal() {
       );
       break;
 
-    
     // STEP 5: IMAGE
-   
+
     case STEPS.IMAGE:
       bodyContent = (
         <div className="flex flex-col gap-4">
@@ -192,7 +216,6 @@ export default function RentModal() {
       break;
   }
 
- 
   const titleMap = {
     [STEPS.CATEGORY]: "Select Category",
     [STEPS.LOCATION]: "Add Location",
