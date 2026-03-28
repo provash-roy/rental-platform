@@ -3,7 +3,7 @@ import { DropdownMenuItem, DropdownMenuSeparator } from "../ui/dropdown-menu";
 import Link from "next/link";
 import { LogOut, User } from "lucide-react";
 import { signOut } from "next-auth/react";
-import RentModal from "../modal/RentModal"
+import RentModal from "../modals/RentModal"
 
 export default function DropdownContent() {
   return (
