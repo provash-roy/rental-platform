@@ -11,7 +11,10 @@ export default function MainLayout({
   return (
     <SessionProvider>
       <Navbar />
-      {children}
+
+      <Container className="pt-20">
+        <main className=""> {children}</main>
+      </Container>
     </SessionProvider>
   );
 }

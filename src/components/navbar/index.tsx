@@ -5,13 +5,12 @@ import Search from "./Search";
 import Container from "../Container";
 import Logo from "./Logo";
 
-
 const Navbar = () => {
   return (
     <>
-      <nav className="fixed w-full bg-white shadow-sm z-50">
+      <nav className="fixed w-full bg-white h-16 shadow-sm z-50">
         <Container>
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center ">
             <Logo />
             <Search />
             <UserMenu />

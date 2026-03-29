@@ -1,14 +1,32 @@
-import React from "react";
+import getListings from "@/actions/getListings";
+import ListingCard from "@/components/listing/listingCard";
+import Link from "next/link";
 
-export default function Home() {
-  return <div>Hello Home page</div>;
+interface Listing {
+  _id: string;
+  category: string;
+  title: string;
+  description: string;
+  pricePerNight: number;
+  images: string[];
+  host?: { name?: string; email?: string };
+  location?: { city?: string; country?: string };
 }
 
-// export default function Home() {
-//   return (
-//     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-//       <h2 className="text-purple-600"> Hello Home</h2>{" "}
-//       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start"></main>
-//     </div>
-//   );
-// }
+export default async function Home() {
+  const listings = await getListings();
+
+  if (!listings) return <p>No listings found</p>;
+
+  return (
+    // <div className=" flex min-h-screen pt-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {listings.map((listing: Listing) => (
+          <Link href={`/listings/${listing._id}`} key={listing._id}>
+            <ListingCard listing={listing} />
+          </Link>
+        ))}
+      {/* </div> */}
+    </div>
+  );
+}

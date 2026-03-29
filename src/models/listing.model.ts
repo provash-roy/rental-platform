@@ -59,4 +59,5 @@ const listingSchema = new Schema<IListing>(
   { timestamps: true },
 );
 
-export default models.Listing || model<IListing>("Listing", listingSchema);
+const Listing = models.Listing || model<IListing>("Listing", listingSchema);
+export default Listing;
